@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wasteagram/screens/list_view_screen.dart';
+import 'package:wasteagram/screens/camera_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -10,7 +10,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData.dark(),
-      home: ListViewScreen(),
+      home: Scaffold(
+          appBar: AppBar(title: const Text('Wasteagram'), centerTitle: true),
+          body: CameraScreen()),
     );
   }
 }
