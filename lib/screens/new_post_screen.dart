@@ -5,7 +5,7 @@ import '../widgets/new_post_form.dart';
 class NewPostScreen extends StatefulWidget {
   final String imageUrl;
 
-  NewPostScreen({required this.imageUrl});
+  const NewPostScreen({super.key, required this.imageUrl});
 
   @override
   NewPostScreenState createState() => NewPostScreenState();
@@ -16,13 +16,21 @@ class NewPostScreenState extends State<NewPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(title: const Text('New Post'), centerTitle: true),
       body: SingleChildScrollView(
           child: Column(
         children: [
-          FadeInImage.memoryNetwork(
-              placeholder: kTransparentImage, image: widget.imageUrl),
+          Semantics(
+            image: true,
+            label: 'selected image showing food waste',
+            onTapHint: 'food waste photo',
+            child: Padding( padding: const EdgeInsets.all(16.0),
+              child: FadeInImage.memoryNetwork(
+                  placeholder: kTransparentImage, image: widget.imageUrl),
+            ),
+          ),
           NewPostForm(imageUrl: widget.imageUrl)
         ],
       )),
