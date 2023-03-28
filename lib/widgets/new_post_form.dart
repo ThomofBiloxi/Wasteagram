@@ -97,7 +97,6 @@ class NewPostFormState extends State<NewPostForm> {
                 } catch (e) {
                   print('Error writing to Firestore: $e');
 
-                  // Show a snackbar indicating that there was an error.
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text(
@@ -139,12 +138,9 @@ class NewPostFormState extends State<NewPostForm> {
     } on PlatformException catch (e) {
       print('Error: ${e.toString()}, code: ${e.code}');
 
-      // Set _locationData to null if an error occurs.
       _locationData = null;
     }
 
-// Update the state to reflect any changes to _locationData.
-    setState(() {
-    });
+    setState(() {});
   }
 }
