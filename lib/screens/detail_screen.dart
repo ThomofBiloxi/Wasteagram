@@ -6,40 +6,62 @@ import 'package:transparent_image/transparent_image.dart';
 class DetailScreen extends StatelessWidget {
   final DocumentSnapshot post;
 
-  const DetailScreen({super.key, required this.post});
+  const DetailScreen({Key? key, required this.post}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isTablet = screenSize.shortestSide >= 600;
+
+    final dateFormat = DateFormat('EEEE, MMMM d, yyyy');
+    final formattedDate = dateFormat.format(post['date'].toDate());
+
+    final imageBoxSize = isTablet ? screenSize.width * 0.7 : null;
+    final imageSize = isTablet ? Size(imageBoxSize!, imageBoxSize) : null;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Post Details'), centerTitle: true),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(isTablet ? 32.0 : 16.0),
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                  DateFormat('EEEE, MMMM d, yyyy')
-                      .format(post['date'].toDate()),
-                  style: const TextStyle(fontSize: 32.0)),
-              const Spacer(flex: 3),
+                formattedDate,
+                style: TextStyle(fontSize: isTablet ? 48.0 : 32.0),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: isTablet ? 32.0 : 16.0),
               Semantics(
-                  image: true,
-                  label: 'Food that has been wasted',
-                  child: FadeInImage.memoryNetwork(
-                      placeholder: kTransparentImage, image: post['imageURL'])),
-              const Spacer(flex: 3),
+                image: true,
+                label: 'Food that has been wasted',
+                child: FadeInImage.memoryNetwork(
+                  placeholder: kTransparentImage,
+                  image: post['imageURL'],
+                  width: imageSize?.width,
+                  height: imageSize?.height,
+                ),
+              ),
+              SizedBox(height: isTablet ? 64.0 : 32.0),
               Semantics(
-                  label: 'number of waste items in the photo',
-                  onTapHint: 'number of waste items',
-                  child: Text('${post['quantity']} items',
-                      style: const TextStyle(fontSize: 32.0))),
-              const Spacer(flex: 3),
+                label: 'number of waste items in the photo',
+                onTapHint: 'number of waste items',
+                child: Text(
+                  '${post['quantity']} items',
+                  style: TextStyle(fontSize: isTablet ? 48.0 : 32.0),
+                ),
+              ),
+              SizedBox(height: isTablet ? 64.0 : 32.0),
               Semantics(
-                  label: 'Location in (latitude, longitude)',
-                  onTapHint: 'location data',
-                  child: Text(
-                      'Location: (${post['latitude']}, ${post['longitude']})')),
+                label: 'Location in (latitude, longitude)',
+                onTapHint: 'location data',
+                child: Text(
+                  'Location: (${post['latitude']}, ${post['longitude']})',
+                  style: TextStyle(fontSize: isTablet ? 32.0 : 24.0),
+                ),
+              ),
             ],
           ),
         ),
