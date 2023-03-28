@@ -113,6 +113,7 @@ class _PostFeedScreenState extends State<PostFeedScreen> {
     return url;
   }
 
+  // Loads New Post Screen for the creation of a new post
   void _handleUploadButtonPressed() async {
     showDialog(
       context: context,
