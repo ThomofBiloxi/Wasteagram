@@ -11,22 +11,18 @@ import '../widgets/loading_posts.dart';
 import '../widgets/upload_button.dart';
 
 class PostFeedScreen extends StatefulWidget {
-
   const PostFeedScreen({Key? key}) : super(key: key);
 
   @override
-  _PostFeedScreenState createState() =>
-      _PostFeedScreenState(); 
+  PostFeedScreenState createState() => PostFeedScreenState();
 }
 
-class _PostFeedScreenState extends State<PostFeedScreen> {
-  
-  File? _image; 
-  final _picker = ImagePicker(); 
+class PostFeedScreenState extends State<PostFeedScreen> {
+  File? _image;
+  final _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
-    
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('posts')
@@ -74,8 +70,7 @@ class _PostFeedScreenState extends State<PostFeedScreen> {
                   enabled: true,
                   onTapHint: 'Select an image',
                   child: UploadButton(
-                    onPressed: () =>
-                        _handleUploadButtonPressed(),
+                    onPressed: () => _handleUploadButtonPressed(),
                   ),
                 ),
               ),
@@ -83,34 +78,10 @@ class _PostFeedScreenState extends State<PostFeedScreen> {
           );
         } else {
           //if there is no data in Firebase
-          return LoadingPosts(
-              onPressed:
-                  _handleUploadButtonPressed);
+          return LoadingPosts(onPressed: _handleUploadButtonPressed);
         }
       },
     );
-  }
-
-  //Return the image url from Firebase Storage
-  Future<String?> _getImageUrl() async {
-    
-    final pickedFile = await _picker.pickImage(
-        source: ImageSource.gallery);
-    if (pickedFile == null) {
-      return null;
-    }
-    _image = File(pickedFile.path);
-    final fileName =
-        '${DateTime.now()}.jpg';
-    final storageReference = FirebaseStorage.instance
-        .ref()
-        .child(fileName); 
-    final uploadTask = storageReference
-        .putFile(_image!); 
-    await uploadTask;
-    final url = await storageReference
-        .getDownloadURL(); 
-    return url;
   }
 
   // Loads New Post Screen for the creation of a new post
@@ -128,30 +99,47 @@ class _PostFeedScreenState extends State<PostFeedScreen> {
       ),
     );
     try {
-      final url = await _getImageUrl(); 
-      Navigator.pop(context);
+      final url = await _getImageUrl();
+      if (mounted) {
+        Navigator.pop(context);
 
-      if (url != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NewPostScreen(imageUrl: url),
-          ),
-        );
+        if (url != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewPostScreen(imageUrl: url),
+            ),
+          );
+        }
       }
     } catch (error, stackTrace) {
       //if an error occurs while uploading the image
-      await Sentry.captureException(error,
-          stackTrace:
-              stackTrace); 
+      await Sentry.captureException(error, stackTrace: stackTrace);
 
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('An error occurred while uploading the image.'),
-        ),
-      );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('An error occurred while uploading the image.'),
+          ),
+        );
+      }
     }
+  }
+
+  //Return the image url from Firebase Storage
+  Future<String?> _getImageUrl() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile == null) {
+      return null;
+    }
+    _image = File(pickedFile.path);
+    final fileName = '${DateTime.now()}.jpg';
+    final storageReference = FirebaseStorage.instance.ref().child(fileName);
+    final uploadTask = storageReference.putFile(_image!);
+    await uploadTask;
+    final url = await storageReference.getDownloadURL();
+    return url;
   }
 }

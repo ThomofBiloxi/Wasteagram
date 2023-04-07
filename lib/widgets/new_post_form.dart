@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wasteagram/model/new_post.dart';
@@ -45,10 +46,10 @@ class NewPostFormState extends State<NewPostForm> {
 
                 // Validate that the input is not null, not empty, and not zero.
                 validator: (value) {
-                  if (value == null || value.isEmpty || value == '0') {
+                  if (value?.isEmpty ?? true) {
                     return 'Please enter the number of items';
                   }
-                  final intValue = int.tryParse(value);
+                  final intValue = int.tryParse(value!);
                   if (intValue == null || intValue <= 0) {
                     return 'Please enter a positive number of items';
                   }
@@ -91,8 +92,9 @@ class NewPostFormState extends State<NewPostForm> {
                         .collection('posts')
                         .add(post.toMap());
 
-                    // Navigate back to the previous screen.
-                    Navigator.pop(context);
+                    if (mounted) {
+                      Navigator.pop(context);
+                    }
                   }
                 } catch (e) {
                   print('Error writing to Firestore: $e');
@@ -109,6 +111,7 @@ class NewPostFormState extends State<NewPostForm> {
               child: const Icon(Icons.upload),
             ),
           ),
+          const SizedBox(height: 25)
         ],
       ),
     );
@@ -121,7 +124,9 @@ class NewPostFormState extends State<NewPostForm> {
       if (!serviceEnabled) {
         serviceEnabled = await _locationService.requestService();
         if (!serviceEnabled) {
-          print('Failed to enable location service. Returning.');
+          if (kDebugMode) {
+            print('Failed to enable location service. Returning.');
+          }
           return;
         }
       }
@@ -130,13 +135,17 @@ class NewPostFormState extends State<NewPostForm> {
       if (permissionGranted == PermissionStatus.denied) {
         permissionGranted = await _locationService.requestPermission();
         if (permissionGranted != PermissionStatus.granted) {
-          print('Location service permission not granted. Returning.');
+          if (kDebugMode) {
+            print('Location service permission not granted. Returning.');
+          }
         }
       }
 
       _locationData = await _locationService.getLocation();
     } on PlatformException catch (e) {
-      print('Error: ${e.toString()}, code: ${e.code}');
+      if (kDebugMode) {
+        print('Error: ${e.toString()}, code: ${e.code}');
+      }
 
       _locationData = null;
     }

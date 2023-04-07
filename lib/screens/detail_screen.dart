@@ -59,7 +59,7 @@ class DetailScreen extends StatelessWidget {
                 onTapHint: 'location data',
                 child: Text(
                   'Location: (${post['latitude']}, ${post['longitude']})',
-                  style: TextStyle(fontSize: isTablet ? 32.0 : 24.0),
+                  style: TextStyle(fontSize: isTablet ? 32.0 : 20.0),
                 ),
               ),
             ],
