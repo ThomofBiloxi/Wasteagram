@@ -8,7 +8,7 @@ Additionally, Wasteagram incorporates Sentry error catching and Google Analytics
 
 Installation
 
-    Clone this repository using git clone https://github.com/your_username/wasteagram.git.
+    Clone this repository using git clone https://github.com/ThomofBiloxi/Wasteagram.git.
     Change into the project directory using cd wasteagram.
     Install dependencies using flutter pub get.
     Create a new Firebase project and enable Firebase Storage and Firebase Firestore.
