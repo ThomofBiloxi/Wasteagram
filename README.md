@@ -18,3 +18,10 @@ Additionally, Wasteagram incorporates Sentry error catching and Google Analytics
     Run the app using flutter run.
     
  # Media
+
+<div style="display: flex;">
+  <img src="https://github.com/ThomofBiloxi/Wasteagram/blob/main/Main%20Screen%20(No%20Posts).png?raw=true" alt="Main Screen (No Posts)" width="400">
+  <img src="https://github.com/ThomofBiloxi/Wasteagram/blob/main/Main%20Screen%20(With%20Posts).png?raw=true" alt="Main Screen (With Posts)" width="400">
+  <img src="https://github.com/ThomofBiloxi/Wasteagram/blob/main/New%20Post%20Creation%20Screen.png?raw=true" alt="New Post Creation Screen" width="400">
+  <img src="https://github.com/ThomofBiloxi/Wasteagram/blob/main/Details%20Screen.png?raw=true" alt="Details Screen" width="400">
+</div>
